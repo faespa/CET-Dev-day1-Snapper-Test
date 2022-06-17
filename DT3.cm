@@ -1,0 +1,633 @@
+/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Linköping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package profile.fparra.extensionfp;
+
+//Enum 
+package enum doorS : field access {	
+    right;
+    left;	
+}
+package enum mat : field access {	
+    one;
+    two;
+    three;
+}
+
+
+/**
+* Cabinet
+*/
+public class Cabinet1 extends HybridSnapper {
+	
+    /**
+     * Enum.
+     */
+    public doorS ds;
+     public mat m;
+
+    /**
+     * Width.
+     */
+    public double width = 18inch;
+
+    /**
+     * Depth.
+     */
+    public double depth = 12inch;
+
+    /**
+     * Height.
+     */
+    public double height = 28inch;
+
+     /**
+     * h offset
+     */
+    public double hOff = 85.5inch;
+
+    /**
+     * Thickness.
+     */
+    public double thickness = 0.75inch;
+
+     /**
+     * Edge
+     */
+    public double edge =  1inch;
+
+    /**
+     * connect Point
+     */
+    public ConnectPoint sideConnectL;
+    public ConnectPoint sideConnectR;
+
+    /**
+     * Width Streth connectors.
+     */
+    public ConnectPoint leftWidthStretch;
+    public ConnectPoint rightWidthStretch;
+
+    /**
+     * Height Streth connectors.
+     */
+    public ConnectPoint heightStretch;
+
+     /**
+     * side?
+     */
+    public bool rightDoor;
+
+    /**
+     * Part number.
+     */
+    public str pn = "Cabinet";
+    
+
+
+    /***********************************************************************
+     * Initialize
+     ***********************************************************************/
+
+    /**
+     * Constructor.
+     */
+    public constructor() {	
+	
+	ds = doorS.right;
+	m = mat.one;
+	initDimensions();
+	initConnectors();
+	super(..);
+    }
+
+
+    /***********************************************************************
+     * Bounds
+     ***********************************************************************/
+
+    /**
+     * Return the bounding box of the snapper.
+     */
+    public box localBound() {
+	return box(point(0, 0, hOff - height), point(width, depth, hOff));
+    }
+
+
+ /***********************************************************************
+     * Dimensions / Domains
+     ***********************************************************************/
+
+    /**
+     * Width domain.
+     */
+    extend public SubSet widthDomain() {
+	return DoubleEnum(18inch, 22inch, 26inch);
+    }
+
+
+    /**
+     * Height domain.
+     */
+    extend public SubSet heightDomain() {
+	return DoubleEnum(28inch, 31.5inch);
+    }
+
+ 
+    /***********************************************************************
+     * Dimensions
+     ***********************************************************************/
+
+    /**
+     * Init Dimensions
+     */
+    extend public void initDimensions() {
+	width = widthDomain.first.safeDouble;
+	height = heightDomain.first.safeDouble;
+    }
+
+    /***********************************************************************
+     * Connectors / Stretching
+     ***********************************************************************/
+
+    /**
+     * Connectors.
+     */
+    public void connectors(ConnectorCollection connectors) {
+	connectors << sideConnectL;
+	connectors << sideConnectR;
+	
+	connectors << leftWidthStretch;
+	connectors << rightWidthStretch;
+	connectors << heightStretch;
+	super(..);
+    }
+    
+
+    /**
+     * Initilaize connectors.
+     */
+    extend public void initConnectors() {
+
+	//left Connector
+	sideConnectL  = TransformSnapPoint(this, (0, depth/2, hOff), (0deg, 0deg, 0deg), sideRuleL);	
+	sideConnectL.setRule(sideRuleL);
+
+	//RightConnector
+	sideConnectR  = TransformSnapPoint(this, (width, depth/2, hOff), (180deg, 0deg, 0deg), sideRuleR);	
+	sideConnectR.setRule(sideRuleR);
+
+	//Width Streth
+	leftWidthStretch = TransformSnapPoint(this, (0, depth/2, hOff), (180deg, 0deg, 0deg), null);
+
+	rightWidthStretch = TransformSnapPoint(this, (width , depth/2, hOff), (0deg, 0deg, 0deg), null);
+	leftWidthStretch.propKey = rightWidthStretch.propKey = "width";
+
+	//Height Streth
+	heightStretch = TransformSnapPoint(this, (width/2, 0, hOff - height), (90deg, 90deg, 0deg), null);
+	//	heightStretch.propKey = "height";
+    }
+   
+
+    /**
+     * Update connectors.
+     */
+    public void updateConnectors() {
+	super();
+	sideConnectL.setPos( (0, depth/2, hOff) );
+	sideConnectR.setPos( (width, depth/2, hOff) );
+	leftWidthStretch.setPos( (0, depth/2, hOff) );
+	rightWidthStretch.setPos( (width, depth/2, hOff) );
+	heightStretch.setPos( (width/2, 0, hOff - height) );
+    }
+
+ 
+     /**
+     * Left/Right width stretch positions.
+     */
+    extend public <point, point> widthStretchPos() {
+	return <(0, depth/2, hOff), (width, depth/2, hOff)>;
+    }
+
+
+    /**
+     * Is the connector stretchable?
+     */
+    public bool stretchable(Connector mySnap) {
+	if (mySnap == leftWidthStretch or mySnap == rightWidthStretch or mySnap == heightStretch)
+	  return true;
+
+	return super(..);
+    }
+
+
+    /**
+     * Stretch
+     */
+    public bool stretch(Connector mySnap, point mousePos, AnimationMouseInfo mouseInfo) {
+	if (mySnap == rightWidthStretch) {
+	    double newWidth = mousePos.x;
+	    ?newWidth = widthDomain.closest(newWidth);
+	    if (newWidth != width) {
+		width = newWidth;
+		updateWidth();
+		invalidate();
+		updateConnectors();
+		alignAllSnapped();
+	    }
+	}
+	if (mySnap == heightStretch) {
+	    double newHeight = mousePos.z*-1 + hOff;
+	    ?newHeight = heightDomain.closest(newHeight);
+	    if (newHeight != height) {
+		height = newHeight;
+		updateHeight();
+		invalidate();
+		updateConnectors();
+		alignAllSnapped();
+	    }
+	}
+	return super(..);
+    }
+
+    
+    //Hide COnnectors
+    public bool isVisible(Connector mySnap) {
+	if (mySnap == sideConnectL or mySnap == sideConnectR and !mySnap.isConnected) {
+	    return false;
+	} else {
+	    return true;
+	}
+	return super(..);
+    }
+    
+
+ /***********************************************************************
+     * Props / Properties
+     ***********************************************************************/
+    
+    /**
+     * Using G2.
+     */
+    public bool usingG2() { return true; }
+    
+
+    /**
+     * Define the props using a syntax.
+     */
+    public props {
+
+	"width" : domain=widthDomain(), setting=PropInputSetting(label=$width,
+								 attributes={#insert, #quick, #drag, #insert},
+					   args=props{list=false},
+					   groupKey="CustomOp",
+					   index=0);
+	  /*
+	  domain=widthDomain() {
+	    Object get(..) { return that.getWidth(); }
+	    void put(..) {
+		if (?double newWidth = v)
+		  that.setWidth(newWidth);
+		return;
+		}
+	  
+		}
+		*/
+
+	"height" : domain=heightDomain(), setting=PropInputSetting(label=$height,
+								   attributes={#insert, #quick, #drag, #insert},
+					    args=props{list=false},
+					    groupKey="CustomOp",
+					    index=1);
+    /*
+	  domain=heightDomain() {
+	    Object get(..) { return that.getHeight(); }
+	    void put(..) {
+		if (?double newHeight = v)
+		  that.setHeight(newHeight);
+		return;
+	    }
+	  }
+    */
+	"ds" : domain=EnumSubSet(doorS), setting=PropInputSetting(
+								  label="Door Side",
+								  attributes={#insert, #quick, #drag, #insert},
+								  args=props{list=true},
+								  groupKey="CustomOp",
+								  index=2);
+	
+	"m" : domain=EnumSubSet(mat), setting=PropInputSetting(label="Material",
+							       attributes={#insert, #quick, #drag, #insert},
+							       args=props{list=true},
+							       groupKey="CustomOp",
+							       index=3);
+		
+    }
+
+     /***********************************************************************
+     * Quick Properties
+     ***********************************************************************/
+
+    public void propChanged(str k, Object v, Object old, Object env=null) {
+	super(..);
+	if (k == "width") {
+	    width = v.double;
+	    updateWidth();
+	    build2D();
+	    invalidate();
+	    updateConnectors();
+	    refreshSnapperAfterLoad(space, this);
+	}
+	if (k == "height") {
+	    height = v.double;
+	    updateHeight();
+	    build2D();
+	    invalidate();
+	    updateConnectors();
+	    refreshSnapperAfterLoad(space, this);
+	}
+	if (k == "ds") {
+	    ds = v.DoorS.v;
+	    build2D();
+	    invalidate();
+	    refreshSnapperAfterLoad(space, this);
+	}
+	
+	if (k == "m") {
+	    m = v.Mat.v;
+	    build2D();
+	    invalidate();
+	    refreshSnapperAfterLoad(space, this);
+	}
+
+    }
+
+
+    /***********************************************************************
+     * Updates
+     ***********************************************************************/    
+   
+    /**
+     * Update Width
+     */
+    extend public void updateWidth() { }
+
+
+    /**
+     * Update Height
+     */
+    extend public void updateHeight() { }
+
+
+    /***********************************************************************
+     ***********************************************************************
+     * GRAPHICS
+     ***********************************************************************
+     ***********************************************************************/
+
+    /***********************************************************************
+     * 2D
+     ***********************************************************************/
+ 
+    /**
+     * Build 2D.
+     */
+    public void build2D() {
+	GInstance allGraphs();
+
+	Graph pathHand;
+	Graph pathDoor;
+	Graph surfaceGraph;
+
+	//Box draw
+	rect surfaceRect = rect(point2D(0, thickness), width, depth);
+	
+	if (ds.right) {
+	    ds = doorS.right;
+	    pathDoor = GShape(getSurfacePathHandOpenR(), fillColor=white, lineType=blackDotLineType);
+	    if (m.one) {
+		surfaceGraph = GRect(surfaceRect, fillColor=mahognyMaterial3D.getAverageColor());
+		pathHand = GShape(getSurfacePathHand(), fillColor=mahognyMaterial3D.getAverageColor());
+	    } else if (m.two) {
+		surfaceGraph = GRect(surfaceRect, fillColor=mapleMaterial3D.getAverageColor());
+		pathHand = GShape(getSurfacePathHand(), fillColor=mapleMaterial3D.getAverageColor());
+	    } else if (m.three) {
+		surfaceGraph = GRect(surfaceRect, fillColor=cherryMaterial3D.getAverageColor());
+		pathHand = GShape(getSurfacePathHand(), fillColor=cherryMaterial3D.getAverageColor());
+	    }
+	} else if (ds.left) {
+	    ds = doorS.left;
+	    pathDoor = GShape(getSurfacePathHandOpenL(), fillColor=white, lineType=blackDotLineType);
+	    if (m.one) {
+		surfaceGraph = GRect(surfaceRect, fillColor=mahognyMaterial3D.getAverageColor());
+		pathHand = GShape(getSurfacePathHand2(), fillColor=mahognyMaterial3D.getAverageColor());
+	    }
+	    if (m.two) {
+		surfaceGraph = GRect(surfaceRect, fillColor=mapleMaterial3D.getAverageColor());
+		pathHand = GShape(getSurfacePathHand2(), fillColor=mapleMaterial3D.getAverageColor());
+	    }
+	    if (m.three) {
+		surfaceGraph = GRect(surfaceRect, fillColor=cherryMaterial3D.getAverageColor());
+		pathHand = GShape(getSurfacePathHand2(), fillColor=cherryMaterial3D.getAverageColor());
+	    }
+	}
+	    
+
+	allGraphs << surfaceGraph;
+	allGraphs << pathHand << pathDoor;
+
+	graph = allGraphs;
+    }
+
+
+    /**
+     * Get path handle Right
+     */
+    extend public APath2D getSurfacePathHand() {
+	APath2D path( (edge, 0) );
+	path.lineTo( (edge, thickness) );
+	path.lineTo( (width - edge - thickness, thickness) );
+	path.arcTo( (width - edge , 0), 270deg );
+	path.lineTo( (edge, 0) );
+	path.close();
+	return path;
+    }
+
+
+    /**
+     * Get path handle Left
+     */
+    extend public APath2D getSurfacePathHand2() {
+	APath2D path( (edge, 0) );
+	path.arcTo( (thickness + edge, thickness), 0deg );
+	path.lineTo( (width - edge, thickness) );
+	path.lineTo( (width - edge, 0) );
+	path.lineTo( (edge, 0) );
+	path.close();
+	return path;
+    }
+
+
+    /**
+     * Get path handle open Right
+     */
+    extend public APath2D getSurfacePathHandOpenR() {
+	APath2D path( (edge, 0) );
+	path.lineTo( (edge, - width + 2*edge) );
+	path.arcTo( ( width - edge, 0), 0deg );
+	path.lineTo( (edge, 0) );
+	path.close();
+	return path;
+    }
+
+
+    /**
+     * Get path handle open Left
+     */
+    extend public APath2D getSurfacePathHandOpenL() {
+	APath2D path( (width - edge, 0) );
+	path.lineTo( (width - edge, - width + 2*edge) );
+	path.arcTo( ( 0 + edge, 0), 180deg );
+	path.lineTo( (width - edge, 0) );
+	path.close();
+	return path;
+    }
+
+
+    /***********************************************************************
+     * 3D
+     ***********************************************************************/
+
+    /**
+     * Get 3D.
+     */
+    public Primitive3D get3D(FetchEnv3D env) {
+	Primitive3D[] prims();
+
+	prims <<? getBox();
+	
+	if (ds.right) {
+	    prims <<? getDoorR();
+	} else if (ds.left) {
+	    prims <<? getDoorL();
+	}
+
+	return Instance3D(prims);
+    }
+
+
+    /**
+     * Draw the Box
+     * */
+    extend public Primitive3D getBox() {
+
+	Box3D boxCab(box((0, 0, hOff - height), width, depth, height));
+
+	if (m.one) {
+	    boxCab.setMaterial(mahognyMaterial3D);
+	} else if (m.two) {
+	    boxCab.setMaterial(mapleMaterial3D);
+	} else if (m.three) {
+	    boxCab.setMaterial(cherryMaterial3D);
+	}
+	
+	return boxCab;
+    }
+
+
+    /**
+     * Get path of Door Right
+     */
+    extend public APath2D getSurfacePath() {
+	APath2D path( (edge, 0) );
+	path.lineTo( (edge, thickness) );
+	path.lineTo( (width - edge - thickness, thickness) );
+	path.arcTo( (width - edge , 0), 270deg );
+	path.lineTo( (edge, 0) );
+	path.close();
+	return path;
+    }
+
+
+     /**
+     * Get path of Door left
+     */
+    extend public APath2D getSurfacePath2() {
+	APath2D path( (edge, 0) );
+	path.arcTo( (thickness + edge, thickness), 0deg );
+	path.lineTo( (width - edge, thickness) );
+	path.lineTo( (width - edge, 0) );
+	path.lineTo( (edge, 0) );
+	path.close();
+	return path;
+    }
+
+
+    /**
+     * Draw the Right Door   
+     **/
+    extend public Primitive3D getDoorR() {
+	PolygonMesh3D door = PolygonMesh3D(getSurfacePath(), height - 2*edge);
+	door.move(point(0, -thickness,  hOff - height + edge));
+
+	if (m.one) {
+	    door.setMaterial(mahognyMaterial3D);
+	} else if (m.two) {
+	    door.setMaterial(mapleMaterial3D);
+	} else if (m.three) {
+	    door.setMaterial(cherryMaterial3D);
+	}
+	return door;
+    }
+
+
+    /**
+     * Draw the Left Door   
+     **/
+    extend public Primitive3D getDoorL() {
+	PolygonMesh3D door = PolygonMesh3D(getSurfacePath2(), height - 2*edge);
+	door.move(point(0, -thickness, hOff - height + edge));
+
+	if (m.one) {
+	    door.setMaterial(mahognyMaterial3D);
+	} else if (m.two) {
+	    door.setMaterial(mapleMaterial3D);
+	} else if (m.three) {
+	    door.setMaterial(cherryMaterial3D);
+	}
+	return door;
+    }
+}
+

@@ -1,0 +1,145 @@
+﻿/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Link�ping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package profile.fparra.extensionfp;
+
+
+
+/**
+ * Extension name.
+ */
+private const str name = "Extension Test";
+
+
+
+/**
+ * Extension Training
+ */
+private class ExtensionTest extends UltraLazyExtension {
+    /**
+     * Initialize.
+     */
+    public void initialize(ExtensionEnv env) {
+	super(env);
+	init();
+    }
+
+    
+    /**
+     * Start.
+     */
+    public void start(ExtensionEnv env) {
+	super(env);
+    }
+
+
+    /**
+     * Stop.
+     */
+    public void stop(ExtensionEnv env) {
+	super(env);
+    }
+
+
+    /**
+     * Init.
+     */
+    final private void init() {
+        safeLoadRs(cmFindUrl("profile/fparra/extensionfp/localize.rs"));
+    }
+}
+
+
+/**
+ * Get image included in this extension
+ */
+package Image exImage(str image) {
+    symbol k = #:package;
+    putIconDbExtensionDir(k, "profile/fparra/extensionfp/images/");
+    return icon(image, k);
+}
+
+
+
+/**
+ * Actual extension (dont change function name).
+ */
+package Extension getExtension() : referred {
+    return ExtensionTest();
+}
+
+
+/**
+ * Extension id (dont change function name).
+ */
+package ExtensionId getExtensionId() : encrypted, referred {
+    ExtensionId extensionId(#"profile.fparra.extensionfp", "Extension Test");
+    // ID1=4849876255729914478
+    // ID2=-6438771311648900695
+    // ID3=5661981252312663416
+    // ID4=2784772740504406853
+    extensionId.id0 = int64(0x434e38c2, 0x4362126e);
+    extensionId.id1 = int64(0xa6a4e39b, 0x2b30f9a9);
+    extensionId.id2 = int64(0x4e9365f3, 0x55048578);
+    extensionId.id3 = int64(0x26a5800d, 0x99f4cb45);
+    return extensionId;
+}
+
+
+/**
+ * Actual extension info (dont change function name).
+ */
+package ExtensionInfo getExtensionInfo() : referred {
+    ExtensionInfo info = loadExtensionInfoFromXml(#:package);
+
+    // All files that are to be shipped with the extension are added to this sequence.
+    Url[] files();
+    files << cmNative("profile/fparra/extensionfp/lazy.xml");
+    files << cmNative("profile/fparra/extensionfp/localize.rs"); // localize.rs contains your localized strings
+    files << cmNative("profile/fparra/extensionfp/toolboxLibrary.png");
+    files << cmNative("profile/fparra/extensionfp/images/extensionLogo.png");
+    files << cmNative("profile/fparra/extensionfp/images/basicBoxIcon.png");
+    info.filesToInclude = files;
+
+    return info;
+}
+
+
+/**
+ * Build it!
+ */
+{
+    autoBuildExtension(#:package);
+}

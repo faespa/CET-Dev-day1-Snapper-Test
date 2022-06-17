@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lazy-extension-info>
+  <main id="profile.fparra.extensionfp" />
+  <toolboxes>
+    <toolbox>
+      <package>profile.fparra.extensionfp</package>
+      <function>toolboxLibrary</function>
+      <label>Extension Test</label>
+      <parent>cet.extensions;dummy</parent>
+      <sortKey>profile.fparra.extensionfp</sortKey>
+    </toolbox>
+  </toolboxes>
+</lazy-extension-info>

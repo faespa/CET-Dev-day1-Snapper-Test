@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<extension-info>
+  <name>extesnion Test</name>
+  <version>13.0.0.0</version>
+  <type>catalog</type>
+  <unsupported-platforms />
+  <main>profile.fparra.extensionfp</main>
+  <packages>
+    <package id="profile.fparra.extensionfp" />
+  </packages>
+  <extension-dependencies>
+    <dependency id="cet.designer" />
+    <dependency id="cm.abstract.dataSymbol" />
+    <dependency id="cm.abstract.dataSymInterface" />
+    <dependency id="cm.abstract.projectInfo" />
+    <dependency id="cm.abstract.office.dataOffice" />
+  </extension-dependencies>
+  <security-delegates>
+    <delegate id="cet.designer" />
+  </security-delegates>
+</extension-info>

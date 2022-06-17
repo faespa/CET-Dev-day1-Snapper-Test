@@ -1,0 +1,116 @@
+
+connectRules.cm,294
+package profile.fparra.extensionfp;extensionfp36,1706
+public ConnectRule sideRuleR;52,2067
+public ConnectRule sideRuleL;53,2098
+public ConnectRule basicLeftToRightCRule;56,2144
+public ConnectRule basicRightToLeftCRule;57,2187
+public ConnectRule basicSymmetricCRule;58,2230
+init 64,2307
+
+dimPresBoards.cm,172
+package profile.fparra.extensionfp;extensionfp36,1706
+public class DimStele extends DimPresBoards 178,4533
+public class DimSteleIntegral extends DimPresBoards 198,4851
+
+DT1.cm,104
+package profile.fparra.extensionfp;extensionfp36,1707
+public class DT1 extends HybridSnapper 42,1785
+
+DT2.cm,104
+package profile.fparra.extensionfp;extensionfp36,1707
+public class DT2 extends HybridSnapper 42,1808
+
+DT3.cm,700
+package profile.fparra.extensionfp;extensionfp36,1706
+package enum doorS 39,1754
+    right;40,1792
+    left;41,1804
+package enum mat 43,1819
+    one;44,1855
+    two;45,1865
+    three;46,1875
+    public void build2D(380,9535
+    extend public APath2D getSurfacePathHand(415,10319
+    extend public APath2D getSurfacePathHand2(429,10651
+    extend public APath2D getSurfacePathHandOpen(443,10975
+    public Primitive3D get3D(460,11408
+    extend public Primitive3D getBox(478,11692
+    extend public APath2D getSurfacePath(496,12108
+    extend public APath2D getSurfacePath2(510,12438
+    extend public Primitive3D getDoorR(524,12767
+    extend public Primitive3D getDoorL(543,13238
+
+DT4.cm,105
+package profile.fparra.extensionfp;extensionfp36,1706
+public class DT4 extends Model3DSnapper 42,1811
+
+dtSurface1.cm,122
+package profile.fparra.extensionfp;extensionfp36,1706
+public class DtSurface extends Model3DSnapper : abstract 42,1770
+
+extension.cm,317
+package profile.fparra.extensionfp;extensionfp36,1711
+private const str name 43,1784
+private class ExtensionTest extends UltraLazyExtension 50,1867
+package Image exImage(88,2454
+package Extension getExtension(99,2683
+package ExtensionId getExtensionId(107,2822
+package ExtensionInfo getExtensionInfo(124,3405
+
+header.cm,185
+package profile.fparra.extensionfp;extensionfp37,1708
+package const int egan_catalogId 39,1747
+package const str egan_dbFileName 40,1789
+package const str egan_catalogCode 41,1833
+
+hybridSnapper.cm,126
+package profile.fparra.extensionfp;extensionfp36,1706
+public class HybridSnapper extends Model3DSnapper : abstract 38,1745
+
+init.cm,95
+package profile.fparra.extensionfp;extensionfp36,1706
+public void initnewSExtension(41,1780
+
+library.cm,135
+package profile.fparra.extensionfp;extensionfp36,1711
+private Library cachedLibrary;42,1775
+package Library toolboxLibrary(48,1842
+
+package.cm,1483
+use cm: basic,37,1756
+use cm: basic, io,37,1756
+use cm: basic, io, io.util,util37,1756
+use cm: basic, io, io.util, win,37,1756
+use cm: basic, io, io.util, win, extension.util.lazy,lazy37,1756
+use cm: basic, io, io.util, win, extension.util.lazy, geometry;37,1756
+use cm.core: library;38,1821
+use cm: core,39,1844
+use cm: core, core3D;39,1844
+use cm.abstract.dataSymbol;dataSymbol40,1867
+use cm.abstract.dataSymbol.properties;properties41,1896
+use cm.abstract.dataSymInterface;dataSymInterface42,1936
+use cm.application;application43,1971
+use cm.abstract.dataSymInterface.catalog;catalog44,1992
+use cm.abstract.office;office45,2035
+use cm: geometry.advanced,advanced47,2062
+use cm: geometry.advanced, core.calc,calc47,2062
+use cm: geometry.advanced, core.calc, format.cm3D,cm3D47,2062
+use cm: geometry.advanced, core.calc, format.cm3D, core.cm3D,cm3D47,2062
+use cm: geometry.advanced, core.calc, format.cm3D, core.cm3D, draw;47,2062
+use cm: io.object;object48,2131
+use cm: core.material,material49,2151
+use cm: core.material, core.render;render49,2151
+use cm.format.xml;xml50,2188
+use cm.format.libxml2;libxml251,2208
+use cm.import.interop;interop52,2232
+use cm.os;os54,2258
+use cm.abstract.projectInfo;projectInfo55,2270
+use cm: extension,60,2476
+use cm: extension, extension.util,util60,2476
+use cm: extension, extension.util, security,60,2476
+use cm: extension, extension.util, security, rs;60,2476
+use cm.core: search;61,2526
+
+extension.xml,19
+<?xml version=1,0
